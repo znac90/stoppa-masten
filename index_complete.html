@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stoppa Mobilmasten - Skönabäcksgången</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: Georgia, serif;
+            background: linear-gradient(135deg, #faf9f6 0%, #f0efe9 100%);
+            color: #2a2a2a;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a3a1b 0%, #2c5f2d 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .header h1 { 
+            font-size: 2rem; 
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .info-banner {
+            background: #fff3cd;
+            border-left: 4px solid #d4af37;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .info-banner strong {
+            color: #1a3a1b;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0dfd8;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-family: inherit;
+            cursor: pointer;
+            color: #2a2a2a;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+            top: 2px;
+        }
+        
+        .tab:hover { opacity: 0.8; }
+        
+        .tab.active {
+            opacity: 1;
+            border-bottom-color: #2c5f2d;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .card h2 {
+            color: #1a3a1b;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #4a8a4b;
+            padding-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1a3a1b;
+        }
+        
+        .required { color: #c53030; }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid #e0dfd8;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #2c5f2d;
+            box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.1);
+        }
+        
+        textarea { min-height: 120px; resize: vertical; }
+        
+        .radio-group { 
+            display: flex; 
+            gap: 2rem; 
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .radio-option { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem;
+        }
+        .radio-option input { width: auto; cursor: pointer; }
+        .radio-option label { cursor: pointer; }
+        
+        .help-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+        
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            margin-right: 1rem;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2c5f2d 0%, #4a8a4b 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 95, 45, 0.3);
+        }
+        
+        .btn-primary:active { transform: translateY(0); }
+        
+        .btn-secondary {
+            background: white;
+            color: #2c5f2d;
+            border: 2px solid #2c5f2d;
+        }
+        
+        .btn-secondary:hover {
+            background: #2c5f2d;
+            color: white;
+        }
+        
+        .preview-box {
+            background: #f8f8f8;
+            border: 2px solid #e0dfd8;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+        
+        .success { 
+            background: #2f855a; 
+            color: white; 
+            padding: 1rem 1.5rem; 
+            border-radius: 8px; 
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideDown 0.4s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .error { 
+            background: #c53030; 
+            color: white; 
+            padding: 1rem 1.5rem; 
+            border-radius: 8px; 
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .email-list {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5rem; }
+            .card { padding: 1.5rem; }
+            .radio-group { flex-direction: column; gap: 1rem; }
+            button { width: 100%; margin-right: 0; }
+            .tabs { overflow-x: auto; }
+            .tab { white-space: nowrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌳 Stoppa Mobilmasten vid Skönabäcksgången</h1>
+        <p>Generera din erinran eller politiker-mejl på 5 minuter</p>
+    </div>
+
+    <div class="container">
+        <div class="info-banner">
+            <strong>⚡ Viktigt! Deadline: Onsdag 12 februari 2026</strong>
+            104+ Malmöbor har redan röstat NEJ via Malmöinitiativet. Din röst räknas!
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('info')">ℹ️ Information</button>
+            <button class="tab" onclick="showTab('erinran')">📝 Erinran</button>
+            <button class="tab" onclick="showTab('politiker')">🏛️ Politiker-mejl</button>
+        </div>
+
+        <!-- INFO TAB -->
+        <div id="info" class="tab-content active">
+            <div class="card">
+                <h2>Om initiativet</h2>
+                
+                <h3 style="color: #2c5f2d; margin-top: 1.5rem;">Vad händer?</h3>
+                <p style="margin-top: 0.5rem;">
+                    Net4Mobility/Vinnergi planerar att bygga en <strong>24 meter hög mobilmast</strong> (motsvarande 8 våningar) 
+                    vid Skönabäcksgången/Bellevuegården i Hyllie. Masten skulle placeras direkt intill villaområdet och 
+                    körsbärsallén med 100 träd.
+                </p>
+
+                <h3 style="color: #2c5f2d; margin-top: 1.5rem;">Varför motsätter vi oss detta?</h3>
+                <div style="background: #f8f8f8; padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem;">
+                    <ol style="margin-left: 1.5rem; line-height: 2;">
+                        <li><strong>Bryter mot Hyllies gröna profil</strong><br>
+                            <span style="font-size: 0.95rem; color: #666;">
+                            Hyllie marknadsförs som Malmös "klimatsmarta" och "hållbara" stadsdel. 
+                            En 24m industriell mast passar inte i detta gröna rekreationsstråk.
+                            </span>
+                        </li>
+                        
+                        <li style="margin-top: 1rem;"><strong>Många sakägare har INTE fått grannmeddelande</strong><br>
+                            <span style="font-size: 0.95rem; color: #666;">
+                            Flera boende inom 150 meter (= sakägare enligt PBL) har inte underrättats, 
+                            vilket är ett formellt fel enligt Plan- och bygglagen 9 kap. 25 §.
+                            </span>
+                        </li>
+                        
+                        <li style="margin-top: 1rem;"><strong>Samma företag fick avslag tidigare</strong><br>
+                            <span style="font-size: 0.95rem; color: #666;">
+                            Net4Mobility/Vinnergi fick avslag för liknande projekt i Gamla Rosengård 
+                            och Västra Kattarp under 2025. Varför ska Hyllie behandlas sämre?
+                            </span>
+                        </li>
+                        
+                        <li style="margin-top: 1rem;"><strong>Hotar Skönabäcksgångens 100 körsbärsträd</strong><br>
+                            <span style="font-size: 0.95rem; color: #666;">
+                            Skönabäcksgången är ett älskat rekreationsstråk med 100 körsbärsträd 
+                            som används dagligen av hundratals Malmöbor för promenader.
+                            </span>
+                        </li>
+                        
+                        <li style="margin-top: 1rem;"><strong>Ingen utredning av alternativ</strong><br>
+                            <span style="font-size: 0.95rem; color: #666;">
+                            Ansökan saknar analys av alternativa placeringar som befintliga höghus, 
+                            kommersiella byggnader, parkeringshus eller industriområden.
+                            </span>
+                        </li>
+                        
+                        <li style="margin-top: 1rem;"><strong>Bristfällig ansökan</strong><br>
+                            <span style="font-size: 0.95rem; color: #666;">
+                            Saknar visualiseringar, skugganalys och utredning av påverkan på området.
+                            </span>
+                        </li>
+                    </ol>
+                </div>
+
+                <h3 style="color: #2c5f2d; margin-top: 1.5rem;">Starkt lokalt motstånd</h3>
+                <div style="background: #fff3cd; padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; border-left: 4px solid #d4af37;">
+                    <p><strong>104+ Malmöbor har röstat NEJ</strong> via Malmöinitiativ EF20260029 "Bevara körsbärsallén Skönabäcksgången"</p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="https://malmo.flexite.com/malmo_fp/listview/3GLM/detailsView/34063" 
+                           target="_blank" 
+                           style="color: #2c5f2d; font-weight: 600;">
+                            → Rösta här på Malmöinitiativet
+                        </a>
+                    </p>
+                </div>
+
+                <h3 style="color: #2c5f2d; margin-top: 1.5rem;">Läs den fullständiga juridiska erinran</h3>
+                <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; border-left: 4px solid #2f855a;">
+                    <p>Zlatan Alikadic har skrivit en detaljerad erinran (4-5 sidor) med alla juridiska argument och hänvisningar till Plan- och bygglagen.</p>
+                    <p style="margin-top: 0.5rem;">
+                        <strong>Ladda ner och läs:</strong>
+                    </p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="#" 
+                           onclick="alert('Ladda upp Zlatans erinran som PDF till GitHub och länka här!'); return false;" 
+                           style="color: #2c5f2d; font-weight: 600; font-size: 1.1rem;">
+                            📄 Huvuderinran från Zlatan Alikadic (PDF)
+                        </a>
+                    </p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                        <em>Tips: När du skapar din egen erinran här på sidan kommer den automatiskt 
+                        att hänvisa till denna detaljerade erinran.</em>
+                    </p>
+                </div>
+
+                <h3 style="color: #2c5f2d; margin-top: 1.5rem;">Vad kan jag göra?</h3>
+                <div style="background: #f0f0f0; padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem;">
+                    <ol style="margin-left: 1.5rem; line-height: 2;">
+                        <li><strong>Skicka in erinran</strong> → Gå till fliken "📝 Erinran" och generera din erinran (tar 5 min)</li>
+                        <li><strong>Mejla politiker</strong> → Gå till fliken "🏛️ Politiker-mejl" och skicka mejl</li>
+                        <li><strong>Rösta på Malmöinitiativet</strong> → 
+                            <a href="https://malmo.flexite.com/malmo_fp/listview/3GLM/detailsView/34063" 
+                               target="_blank" 
+                               style="color: #2c5f2d;">
+                                Rösta här
+                            </a>
+                        </li>
+                        <li><strong>Dela med grannar</strong> → Skicka denna sida till fler i Hyllie!</li>
+                    </ol>
+                </div>
+
+                <h3 style="color: #2c5f2d; margin-top: 1.5rem;">Tidsplan</h3>
+                <div style="background: #fff3cd; padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; border-left: 4px solid #c53030;">
+                    <p><strong style="color: #c53030;">⚠️ DEADLINE: Onsdag 12 februari 2026</strong></p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>Måndag 10 feb:</strong> Mejla politiker</li>
+                        <li><strong>Tisdag 11 feb:</strong> Zlatan skickar huvuderinran</li>
+                        <li><strong>Onsdag 12 feb:</strong> Alla andra skickar sina erinringar (senast 17:00)</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #2c5f2d; margin-top: 1.5rem;">Kontakt</h3>
+                <p style="margin-top: 0.5rem;">
+                    Frågor om kampanjen? Kontakta:<br>
+                    <strong>Zlatan Alikadic</strong><br>
+                    📧 <a href="mailto:zlatan.alikadic@me.com" style="color: #2c5f2d;">zlatan.alikadic@me.com</a><br>
+                    📱 <a href="tel:0700100360" style="color: #2c5f2d;">0700-100360</a>
+                </p>
+
+                <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, #2c5f2d 0%, #4a8a4b 100%); border-radius: 12px; color: white;">
+                    <h3 style="color: white; margin-bottom: 1rem;">🌳 Redo att börja?</h3>
+                    <p style="margin-bottom: 1rem;">Klicka på flikarna ovan för att skapa din erinran eller mejl till politiker!</p>
+                    <button onclick="showTab('erinran'); document.querySelectorAll('.tab')[1].classList.add('active'); document.querySelectorAll('.tab')[0].classList.remove('active');" 
+                            style="background: white; color: #2c5f2d; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-right: 1rem;">
+                        📝 Skapa erinran
+                    </button>
+                    <button onclick="showTab('politiker'); document.querySelectorAll('.tab')[2].classList.add('active'); document.querySelectorAll('.tab')[0].classList.remove('active');" 
+                            style="background: white; color: #2c5f2d; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                        📧 Mejla politiker
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ERINRAN TAB -->
+        <div id="erinran" class="tab-content">
+            <div class="card">
+                <h2>Generera din erinran</h2>
+                <div class="success" id="erinran-success">✓ Erinran genererad! Scrolla ner för att spara som PDF.</div>
+                <div class="error" id="erinran-error">⚠ Vänligen fyll i alla obligatoriska fält.</div>
+                
+                <form id="erinran-form">
+                    <div class="form-group">
+                        <label>Fullständigt namn <span class="required">*</span></label>
+                        <input type="text" id="namn" required placeholder="Ex: Anna Andersson">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Adress <span class="required">*</span></label>
+                        <input type="text" id="adress" required placeholder="Ex: Hagebäcksgatan 15">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Postnummer och ort <span class="required">*</span></label>
+                        <input type="text" id="postort" required value="216 20 Malmö">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Telefon <span class="required">*</span></label>
+                        <input type="tel" id="telefon" required placeholder="Ex: 070-123 45 67">
+                    </div>
+
+                    <div class="form-group">
+                        <label>E-post <span class="required">*</span></label>
+                        <input type="email" id="epost" required placeholder="Ex: anna.andersson@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ungefärligt avstånd till masten (meter)</label>
+                        <input type="number" id="avstand" placeholder="Ex: 105">
+                        <div class="help-text">Mät på Google Maps. Masten ska stå vid Svansjögatan/Bellevuegården.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Är du sakägare? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="sakagare-ja" name="sakagare" value="ja" required>
+                                <label for="sakagare-ja" style="margin:0; font-weight:normal;">Ja (bor inom 150m)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="sakagare-nej" name="sakagare" value="nej">
+                                <label for="sakagare-nej" style="margin:0; font-weight:normal;">Nej (bor längre bort)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Har du fått grannmeddelande från kommunen?</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="grannbrev-ja" name="grannbrev" value="ja">
+                                <label for="grannbrev-ja" style="margin:0; font-weight:normal;">Ja</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="grannbrev-nej" name="grannbrev" value="nej">
+                                <label for="grannbrev-nej" style="margin:0; font-weight:normal;">Nej</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Hur påverkas du specifikt? (valfritt)</label>
+                        <textarea id="paverkan" placeholder="Ex: Masten kommer synas direkt från mitt kök..."></textarea>
+                        <div class="help-text">Beskriv hur just DU påverkas.</div>
+                    </div>
+
+                    <button type="button" class="btn-primary" onclick="genereraErinran()">📄 Generera erinran</button>
+                </form>
+
+                <div id="erinran-preview" style="display:none;">
+                    <h3 style="margin-top: 2rem; color: #1a3a1b;">Förhandsvisning:</h3>
+                    <div class="preview-box" id="erinran-text"></div>
+                    <div style="margin-top: 1.5rem;">
+                        <button type="button" class="btn-primary" onclick="sparaErinranPDF()">🖨️ Spara som PDF</button>
+                        <button type="button" class="btn-secondary" onclick="kopieraErinran()">📋 Kopiera text</button>
+                    </div>
+                    
+                    <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid #2f855a;">
+                        <strong style="color: #1a3a1b;">📬 Så här skickar du in:</strong>
+                        <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li><strong>E-post:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2e5d5a4f4a5d4c574949404f4a5d4541405a415c4b5a6e434f424341005d4b">[email&#160;protected]</a><br>
+                                <em>Ämne: Erinran - Dnr SBN 2025-004109</em></li>
+                            <li><strong>Post:</strong> Stadsbyggnadskontoret, 205 80 Malmö</li>
+                            <li><strong>Deadline:</strong> Onsdag 12 februari 2026</li>
+                        </ol>
+                        <p style="margin-top: 1rem; font-size: 0.95rem; background: white; padding: 0.75rem; border-radius: 4px;">
+                            💡 <strong>Tips:</strong> I utskriftsdialogen, välj "Spara som PDF".
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- POLITIKER TAB -->
+        <div id="politiker" class="tab-content">
+            <div class="card">
+                <h2>Generera politiker-mejl</h2>
+                <div class="success" id="politiker-success">✓ Mejl genererat! Scrolla ner för att kopiera.</div>
+                <div class="error" id="politiker-error">⚠ Vänligen fyll i alla obligatoriska fält.</div>
+                
+                <form id="politiker-form">
+                    <div class="form-group">
+                        <label>Ditt namn <span class="required">*</span></label>
+                        <input type="text" id="pol-namn" required placeholder="Ex: Anna Andersson">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Din adress <span class="required">*</span></label>
+                        <input type="text" id="pol-adress" required placeholder="Ex: Hagebäcksgatan 15">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Telefon <span class="required">*</span></label>
+                        <input type="tel" id="pol-telefon" required placeholder="Ex: 070-123 45 67">
+                    </div>
+
+                    <div class="form-group">
+                        <label>E-post <span class="required">*</span></label>
+                        <input type="email" id="pol-epost" required placeholder="Ex: anna.andersson@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vilka politiker vill du mejla? <span class="required">*</span></label>
+                        <select id="politiker-val" required>
+                            <option value="">-- Välj --</option>
+                            <option value="prio1">De 5 viktigaste (Ordförande + styrande partier)</option>
+                            <option value="alla">Alla i stadsbyggnadsnämnden (13 st)</option>
+                        </select>
+                        <div class="help-text">Vi rekommenderar att börja med de 5 viktigaste.</div>
+                    </div>
+
+                    <button type="button" class="btn-primary" onclick="genereraPolitikerMejl()">📧 Generera mejl</button>
+                </form>
+
+                <div id="politiker-preview" style="display:none;">
+                    <h3 style="margin-top: 2rem; color: #1a3a1b;">Mejl redo att skickas:</h3>
+                    
+                    <div class="email-list">
+                        <strong>Till:</strong> <span id="politiker-till"></span>
+                    </div>
+                    
+                    <div style="background: #f0f0f0; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <strong>Ämne:</strong> 104+ Hylliebor motsätter sig mobilmast vid Skönabäcksgången - Dnr SBN 2025-004109
+                    </div>
+                    
+                    <div class="preview-box" id="politiker-text"></div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <button type="button" class="btn-primary" onclick="oppnaMejl()">📬 Öppna i mejlklient</button>
+                        <button type="button" class="btn-secondary" onclick="kopieraPolitikerMejl()">📋 Kopiera mejl</button>
+                    </div>
+                    
+                    <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid #2f855a;">
+                        <strong style="color: #1a3a1b;">💡 Tips:</strong>
+                        <p style="margin-top: 0.5rem;">Klicka "Öppna i mejlklient" för att automatiskt skapa mejlet i ditt mejlprogram (Gmail, Outlook, etc). Eller kopiera texten och klistra in manuellt.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>🌳 Tillsammans bevarar vi Skönabäcksgången 🌳</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            Frågor? Kontakta Zlatan Alikadic: 
+            <a href="/cdn-cgi/l/email-protection#047e686570656a2a65686d6f65606d674469612a676b69" style="color: #2c5f2d;"><span class="__cf_email__" data-cfemail="aad0c6cbdecbc484cbc6c3c1cbcec3c9eac7cf84c9c5c7">[email&#160;protected]</span></a> | 
+            <a href="tel:0700100360" style="color: #2c5f2d;">0700-100360</a>
+        </p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ERINRAN FUNKTIONER
+        function genereraErinran() {
+            var form = document.getElementById('erinran-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                document.getElementById('erinran-error').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('erinran-error').style.display = 'none';
+                }, 3000);
+                return;
+            }
+
+            var namn = document.getElementById('namn').value;
+            var adress = document.getElementById('adress').value;
+            var postort = document.getElementById('postort').value;
+            var telefon = document.getElementById('telefon').value;
+            var epost = document.getElementById('epost').value;
+            var avstand = document.getElementById('avstand').value;
+            
+            var sakagareEl = document.querySelector('input[name="sakagare"]:checked');
+            if (!sakagareEl) {
+                alert('Vänligen välj om du är sakägare.');
+                return;
+            }
+            var sakagare = sakagareEl.value;
+            
+            var grannbrevEl = document.querySelector('input[name="grannbrev"]:checked');
+            var grannbrev = grannbrevEl ? grannbrevEl.value : 'vet ej';
+            
+            var paverkan = document.getElementById('paverkan').value;
+
+            var idag = new Date().toLocaleDateString('sv-SE');
+            var dokumentTyp = sakagare === 'ja' ? 'ERINRAN' : 'YTTRANDE';
+            
+            var text = dokumentTyp + ' MOT BYGGLOVSANSÖKAN\n\n';
+            text += 'Till: Malmö Stadsbyggnadsnämnd\n';
+            text += 'Ärende: Dnr SBN 2025-004109\n';
+            text += 'Från: ' + namn + ', ' + adress + '\n\n';
+            text += dokumentTyp.toUpperCase() + ' MOT BYGGLOVSANSÖKAN\n\n';
+            text += 'Jag framför härmed ' + dokumentTyp.toLowerCase() + ' mot bygglovsansökan Dnr SBN 2025-004109 avseende uppförande av 24 meter hög monopole och teknikbod på fastigheten Hyllie 160:12, Svansjögatan/Bellevuegården.\n\n';
+            text += 'SAKÄGARSKAP OCH PÅVERKAN\n\n';
+            text += 'Jag är boende på ' + adress;
+            if (avstand) {
+                text += ' vilket ligger cirka ' + avstand + ' meter från den planerade masten';
+            }
+            text += '.\n\n';
+
+            if (grannbrev === 'nej') {
+                text += 'Jag har INTE erhållit något grannmeddelande från stadsbyggnadskontoret trots ';
+                text += sakagare === 'ja' ? 'att jag är sakägare och bor inom påverkansområdet' : 'närhet till projektet';
+                text += '.\n\n';
+            }
+
+            if (paverkan) {
+                text += paverkan + '\n\n';
+            }
+
+            text += 'GRUNDER FÖR MIN ' + dokumentTyp.toUpperCase() + '\n\n';
+            text += 'Jag instämmer fullt ut i och hänvisar till den detaljerade gemensamma erinran från Zlatan Alikadic, Hagebäcksgatan 9, daterad 2026-02-11. Särskilt vill jag framhålla:\n\n';
+            text += '1. Bristande sakägarunderrättelse: Många boende inom 150 meter';
+            if (grannbrev === 'nej') text += ', inklusive jag själv,';
+            text += ' har inte erhållit grannmeddelande trots att vi är sakägare enligt PBL 9 kap. 25 §.\n\n';
+            text += '2. Bryter mot områdets karaktär: En 24 meter hög industriell mast passar inte i detta villaområde med radhus och i närheten av det värdefulla rekreationsstråket Skönabäcksgången.\n\n';
+            text += '3. Bristande utredning: Ansökan saknar visualiseringar, skugganalys, utredning av påverkan på körsbärsallén och alternativlokalisering.\n\n';
+            text += '4. Stark lokal opinion: 104+ Malmöbor har röstat emot projektet via Malmöinitiativ EF20260029 "Bevara körsbärsallén Skönabäcksgången".\n\n';
+            text += '5. Tidigare avslag: Samma sökande (Net4Mobility/Vinnergi) har tidigare under 2025 fått avslag för liknande projekt i Gamla Rosengård och Västra Kattarp.\n\n';
+            text += 'YRKANDE\n\n';
+            text += 'Jag yrkar att stadsbyggnadsnämnden avslår denna bygglovsansökan.\n\n';
+            text += 'Alternativt, om ansökan inte avslås, yrkar jag att ärendet återremitteras med krav på:\n';
+            text += '- Korrekt sakägarunderrättelse till alla berörda\n';
+            text += '- Visualiseringar som visar mastens faktiska påverkan\n';
+            text += '- Utredning av påverkan på körsbärsallén\n';
+            text += '- Analys av alternativa placeringar\n\n';
+            text += 'ÖNSKEMÅL\n\n';
+            text += 'Jag önskar:\n';
+            text += '- Bli delgiven beslut i ärendet\n';
+            text += '- Information om eventuell bygganmälan och byggstart\n';
+            text += '- Att få information om eventuell syn på plats\n\n';
+            text += 'Med vänlig hälsning,\n\n';
+            text += namn + '\n';
+            text += adress + '\n';
+            text += postort + '\n';
+            text += 'Telefon: ' + telefon + '\n';
+            text += 'E-post: ' + epost + '\n\n';
+            text += 'Datum: ' + idag + '\n\n';
+            text += 'BILAGOR\n';
+            text += '- Malmöinitiativ EF20260029 (hänvisning)\n';
+            text += '- Gemensam erinran från Zlatan Alikadic (bifoga gärna)\n';
+
+            window.erinranText = text;
+            window.erinranNamn = namn;
+
+            document.getElementById('erinran-text').textContent = text;
+            document.getElementById('erinran-preview').style.display = 'block';
+            document.getElementById('erinran-success').style.display = 'block';
+            
+            document.getElementById('erinran-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            setTimeout(function() {
+                document.getElementById('erinran-success').style.display = 'none';
+            }, 4000);
+        }
+
+        function kopieraErinran() {
+            var text = document.getElementById('erinran-text').textContent;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('✓ Texten har kopierats!');
+                }).catch(function() {
+                    kopieraFallback(text);
+                });
+            } else {
+                kopieraFallback(text);
+            }
+        }
+
+        function sparaErinranPDF() {
+            var text = window.erinranText;
+            var namn = window.erinranNamn;
+            
+            var printWindow = window.open('', '_blank');
+            printWindow.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">');
+            printWindow.document.write('<title>Erinran - ' + namn + '</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write('@page { margin: 2.5cm; }');
+            printWindow.document.write('body { font-family: "Times New Roman", serif; font-size: 12pt; line-height: 1.6; color: #000; max-width: 21cm; margin: 0 auto; padding: 1cm; }');
+            printWindow.document.write('pre { white-space: pre-wrap; font-family: "Times New Roman", serif; margin: 0; }');
+            printWindow.document.write('</style></head><body>');
+            printWindow.document.write('<pre>' + text.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>');
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            
+            setTimeout(function() {
+                printWindow.print();
+            }, 500);
+        }
+
+        // POLITIKER FUNKTIONER
+        function genereraPolitikerMejl() {
+            var form = document.getElementById('politiker-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                document.getElementById('politiker-error').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('politiker-error').style.display = 'none';
+                }, 3000);
+                return;
+            }
+
+            var namn = document.getElementById('pol-namn').value;
+            var adress = document.getElementById('pol-adress').value;
+            var telefon = document.getElementById('pol-telefon').value;
+            var epost = document.getElementById('pol-epost').value;
+            var val = document.getElementById('politiker-val').value;
+
+            var tillAdresser = '';
+            if (val === 'prio1') {
+                tillAdresser = 'stefana.hoti@malmo.se, arwin.sohrabi.nejad@malmo.se, lars.hellstrom@malmo.se, sara.andersson@malmo.se, jens.portinson.hylander@malmo.se';
+            } else if (val === 'alla') {
+                tillAdresser = 'stefana.hoti@malmo.se, arwin.sohrabi.nejad@malmo.se, tony.rahm@malmo.se, lena.trell@malmo.se, jose.luis.munoz.pastene@malmo.se, mihaela.jabir@malmo.se, lars.hellstrom@malmo.se, bo.mats.brogren@malmo.se, peter.ahlstrom@malmo.se, anders.olin@malmo.se, stefan.claesson@malmo.se, sara.andersson@malmo.se, jens.portinson.hylander@malmo.se, martin.molin@malmo.se';
+            }
+
+            var mejlText = 'Hej,\n\n';
+            mejlText += 'Vi är en grupp boende i Hyllie som motsätter oss bygglovsansökan Dnr SBN 2025-004109 för en 24 meter hög mobilmast vid Skönabäcksgången/Bellevuegården.\n\n';
+            mejlText += 'FAKTA OM ÄRENDET\n\n';
+            mejlText += '- Sökande: Net4Mobility/Vinnergi\n';
+            mejlText += '- Plats: Fastigheten Hyllie 160:12, vid Skönabäcksgången\n';
+            mejlText += '- Åtgärd: 24 meter hög monopole (motsvarar 8 våningar) + teknikbod\n';
+            mejlText += '- Omgivning: Villaområde med radhus, direkt vid värdefullt rekreationsstråk\n\n';
+            mejlText += 'STARKT LOKALT MOTSTÅND\n\n';
+            mejlText += '- 104+ Malmöbor har röstat NEJ via Malmöinitiativ EF20260029\n';
+            mejlText += '- Många sakägare har INTE fått grannmeddelande (formellt fel enligt PBL 9 kap. 25 §)\n';
+            mejlText += '- 10-15+ individuella erinringar kommer att skickas in\n\n';
+            mejlText += 'VARFÖR VI MOTSÄTTER OSS\n\n';
+            mejlText += '1. Formellt fel: Många sakägare inom 150 meter har inte underrättats\n\n';
+            mejlText += '2. Bryter mot Hyllies gröna profil: Malmös klimatsmarta stadsdel ska inte få industriella master i sitt viktigaste rekreationsstråk\n\n';
+            mejlText += '3. Tidigare avslag: Net4Mobility fick avslag i Rosengård och Kattarp 2025. Varför ska Hyllie behandlas sämre?\n\n';
+            mejlText += '4. Bristande utredning: Ansökan saknar analys av alternativa placeringar\n\n';
+            mejlText += '5. Skönabäcksgången är värdefullt: 100 körsbärsträd, daglig rekreation för hundratals Malmöbor\n\n';
+            mejlText += 'VÅRT ÖNSKEMÅL\n\n';
+            mejlText += 'Vi vill gärna boka ett kort möte (30 min, fysiskt eller digitalt) för att visa foton från Skönabäcksgången och hur masten skulle påverka området.\n\n';
+            mejlText += 'Vi hoppas att ni tar våra invändningar på allvar innan beslut fattas.\n\n';
+            mejlText += 'Med vänlig hälsning,\n\n';
+            mejlText += namn + '\n';
+            mejlText += adress + '\n';
+            mejlText += 'Telefon: ' + telefon + '\n';
+            mejlText += 'E-post: ' + epost + '\n\n';
+            mejlText += 'Malmöinitiativ: https://malmo.flexite.com/malmo_fp/listview/3GLM/detailsView/34063\n';
+
+            window.politikerMejl = {
+                till: tillAdresser,
+                amne: '104+ Hylliebor motsätter sig mobilmast vid Skönabäcksgången - Dnr SBN 2025-004109',
+                text: mejlText
+            };
+
+            document.getElementById('politiker-till').textContent = tillAdresser;
+            document.getElementById('politiker-text').textContent = mejlText;
+            document.getElementById('politiker-preview').style.display = 'block';
+            document.getElementById('politiker-success').style.display = 'block';
+
+            document.getElementById('politiker-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            setTimeout(function() {
+                document.getElementById('politiker-success').style.display = 'none';
+            }, 4000);
+        }
+
+        function kopieraPolitikerMejl() {
+            var text = document.getElementById('politiker-text').textContent;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('✓ Mejlet har kopierats!');
+                }).catch(function() {
+                    kopieraFallback(text);
+                });
+            } else {
+                kopieraFallback(text);
+            }
+        }
+
+        function oppnaMejl() {
+            if (!window.politikerMejl) {
+                alert('Vänligen generera mejlet först.');
+                return;
+            }
+
+            var mailto = 'mailto:' + window.politikerMejl.till + 
+                         '?subject=' + encodeURIComponent(window.politikerMejl.amne) + 
+                         '&body=' + encodeURIComponent(window.politikerMejl.text);
+            window.location.href = mailto;
+        }
+
+        // HELPER FUNCTIONS
+        function kopieraFallback(text) {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+       
