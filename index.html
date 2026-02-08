@@ -339,9 +339,24 @@
     </footer>
 
     <script>
+        // Hjälpfunktion: hitta jsPDF-konstruktorn oavsett global namnrymd
+        function getJsPDFConstructor() {
+            // jsPDF 2.x UMD exponerar window.jspdf.jsPDF (gemener)
+            if (typeof jspdf !== 'undefined' && jspdf.jsPDF) {
+                return jspdf.jsPDF;
+            }
+            // Vissa builds exponerar window.jsPDF (versaler)
+            if (typeof jsPDF !== 'undefined') {
+                if (typeof jsPDF === 'function') return jsPDF;
+                if (jsPDF.jsPDF) return jsPDF.jsPDF;
+            }
+            return null;
+        }
+
         // Vänta på att jsPDF ska ladda
         window.addEventListener('load', function() {
-            console.log('Sida laddad, jsPDF status:', typeof jsPDF !== 'undefined' ? 'OK' : 'LOADING');
+            var ctor = getJsPDFConstructor();
+            console.log('Sida laddad, jsPDF status:', ctor ? 'OK' : 'LOADING');
         });
 
         function generera() {
@@ -484,35 +499,34 @@
         function laddaNerPDF() {
             var btn = document.getElementById('pdfBtn');
             var originalText = btn.innerHTML;
-            
-            try {
-                if (typeof jsPDF === 'undefined') {
-                    alert('PDF-biblioteket laddas fortfarande...\n\nVänta 2 sekunder och försök igen.');
-                    return;
-                }
 
-                btn.innerHTML = '<span class="loading"></span> Skapar PDF...';
-                btn.disabled = true;
+            var JsPDFConstructor = getJsPDFConstructor();
+            if (!JsPDFConstructor) {
+                alert('PDF-biblioteket laddas fortfarande...\n\nVänta 2 sekunder och försök igen.');
+                return;
+            }
 
-                setTimeout(function() {
-                    skapaPDF();
+            btn.innerHTML = '<span class="loading"></span> Skapar PDF...';
+            btn.disabled = true;
+
+            setTimeout(function() {
+                try {
+                    skapaPDF(JsPDFConstructor);
+                } catch (error) {
+                    console.error('PDF-fel:', error);
+                    alert('Ett fel uppstod vid PDF-skapande: ' + error.message + '\n\nAnvänd "Kopiera text" istället och klistra in i Word.');
+                } finally {
                     btn.innerHTML = originalText;
                     btn.disabled = false;
-                }, 300);
-
-            } catch (error) {
-                console.error('PDF-fel:', error);
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                alert('Ett fel uppstod vid PDF-skapande.\n\nAnvänd "Kopiera text" istället och klistra in i Word.');
-            }
+                }
+            }, 300);
         }
 
-        function skapaPDF() {
+        function skapaPDF(JsPDFConstructor) {
             var text = window.currentErinran;
             var namn = window.currentNamn;
-            
-            var doc = new jsPDF.jsPDF({
+
+            var doc = new JsPDFConstructor({
                 orientation: 'portrait',
                 unit: 'mm',
                 format: 'a4'
